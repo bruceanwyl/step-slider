@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:quiver/core.dart';
+import 'package:quiver_hashcode/hashcode.dart';
 
 abstract class Snapper {
   SnapperConfig _config;
