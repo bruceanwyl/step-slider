@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_slider/src/snap_mode.dart';
+import 'package:step_slider/src/snapper.dart';
 import 'package:step_slider/step_slider.dart';
 
 class StepSlider extends StatefulWidget {
