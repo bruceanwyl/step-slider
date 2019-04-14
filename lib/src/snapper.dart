@@ -96,6 +96,12 @@ class StretchSnapper extends Snapper {
     bounds.add(_config.max);
     return bounds;
   }
+
+  @override
+  bool operator ==(o) => o != null && o is StretchSnapper;
+
+  @override
+  int get hashCode => super.hashCode;
 }
 
 class SnapperConfig {

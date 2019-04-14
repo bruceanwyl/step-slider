@@ -1,28 +1,20 @@
-import 'package:quiver/core.dart';
-import 'package:step_slider/step_slider.dart';
+import 'package:step_slider/src/snapper.dart';
 
 class SnapMode {
-  const SnapMode._(this._snapper, this._name);
+  const SnapMode._(this._snapper);
 
-  SnapMode.value(double value) : this._(ValueSnapper(value), 'value');
-  SnapMode.percent(double percent) : this._(PercentSnapper(percent), 'percent');
-  SnapMode.stretch() : this._(StretchSnapper(), 'stretch');
+  SnapMode.value(double value) : this._(ValueSnapper(value));
+  SnapMode.percent(double percent) : this._(PercentSnapper(percent));
+  SnapMode.stretch() : this._(StretchSnapper());
 
   final Snapper _snapper;
-  final String _name;
-
-  @override
-  String toString() => '$SnapMode.$_name';
 
   @override
   bool operator ==(o) =>
-      o != null &&
-      o is SnapMode &&
-      o._name == this._name &&
-      o._snapper == this._snapper;
+      o != null && o is SnapMode && o._snapper == this._snapper;
 
   @override
-  int get hashCode => hash2(_name, _snapper);
+  int get hashCode => _snapper.hashCode;
 
   Snapper snapperFor(List<double> items, double min, double max) =>
       _snapper..config = SnapperConfig(items, min, max);
