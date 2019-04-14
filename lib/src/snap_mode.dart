@@ -16,6 +16,6 @@ class SnapMode {
   @override
   int get hashCode => _snapper.hashCode;
 
-  Snapper snapperFor(List<double> items, double min, double max) =>
+  Snapper snapperFor(Set<double> items, double min, double max) =>
       _snapper..config = SnapperConfig(items, min, max);
 }

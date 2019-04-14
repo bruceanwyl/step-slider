@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:quiver_hashcode/hashcode.dart';
 
 abstract class Snapper {
@@ -106,7 +107,7 @@ class StretchSnapper extends Snapper {
 
 class SnapperConfig {
   SnapperConfig(this.items, this.min, this.max);
-  final List<double> items;
+  final Set<double> items;
   final double min;
   final double max;
 
@@ -114,9 +115,9 @@ class SnapperConfig {
   bool operator ==(o) =>
       o != null &&
       o is SnapperConfig &&
-      o.items == this.items &&
       o.min == this.min &&
-      o.max == this.max;
+      o.max == this.max &&
+      SetEquality<double>().equals(o.items, this.items);
 
   @override
   int get hashCode => hash3(items, min, max);
