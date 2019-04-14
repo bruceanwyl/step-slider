@@ -1,14 +1,28 @@
 # step_slider
 
-A new Flutter package project.
+Flutter slider widget that snaps to given step values and notifies about step changes.
 
 ## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.io/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Add StepSlider to your widget tree along with needed custom arguments:
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```dart
+@override
+Widget build(BuildContext context) {
+    ...
+    child: StepSlider(
+        min: 100.0,
+        max: 200.0,
+        steps: {110, 150, 160, 195},
+        initialStep: _currentStep,
+        animCurve: Curves.bounceInOut,
+        animDuration: Duration(seconds: 1),
+        snapMode: SnapMode.value(10),
+        hardSnap: true,
+        onStepChanged: (it) => print('Step changed to $it.'),
+        // ... slider's other args
+    ),
+}
+```
+
+![StepSlider demo](https://giant.gfycat.com/LongFailingDowitcher.gif)
