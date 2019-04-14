@@ -96,7 +96,8 @@ class StepSlider extends StatefulWidget {
 class _StepSliderState extends State<StepSlider>
     with SingleTickerProviderStateMixin {
   AnimationController _animator;
-  CurvedAnimation _animation;
+  CurvedAnimation _baseAnim;
+  Animation<double> _animation;
   double _currentStep;
   Snapper _snapper;
 
@@ -107,8 +108,8 @@ class _StepSliderState extends State<StepSlider>
     if (snapper != _snapper) {
       _snapper = snapper;
     }
-    _animation.curve = widget.animCurve;
     _animator.duration = widget.animDuration;
+    _baseAnim.curve = widget.animCurve;
   }
 
   @override
@@ -117,6 +118,7 @@ class _StepSliderState extends State<StepSlider>
     _currentStep = widget.initialStep ?? widget.steps.first;
     _animator = AnimationController(
         vsync: this, duration: widget.animDuration, value: 1.0);
+    _baseAnim = CurvedAnimation(parent: _animator, curve: widget.animCurve);
     _snapper = _createSnapper();
     _animateTo(_currentStep, false);
   }
@@ -191,9 +193,8 @@ class _StepSliderState extends State<StepSlider>
   }
 
   void _animateTo(double end, bool restart) {
-    final tween = Tween(begin: _animation?.value ?? end, end: end);
-    _animation = CurvedAnimation(
-        parent: tween.animate(_animator), curve: widget.animCurve);
+    _animation =
+        Tween(begin: _animation?.value ?? end, end: end).animate(_baseAnim);
     if (restart) {
       _animator.forward(from: 0.0);
     }
