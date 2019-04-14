@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:step_slider/src/snap_mode.dart';
 import 'package:step_slider/src/snapper.dart';
-import 'package:step_slider/step_slider.dart';
 
 class StepSlider extends StatefulWidget {
   StepSlider({
@@ -97,31 +96,33 @@ class StepSlider extends StatefulWidget {
 class _StepSliderState extends State<StepSlider>
     with SingleTickerProviderStateMixin {
   AnimationController _animator;
-  Animation<double> _animation;
+  CurvedAnimation _animation;
   double _currentStep;
   Snapper _snapper;
 
   @override
   void didUpdateWidget(StepSlider oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.snapMode != widget.snapMode) {
-      _updateSnapper();
+    final snapper = _createSnapper();
+    if (snapper != _snapper) {
+      _snapper = snapper;
     }
+    _animation.curve = widget.animCurve;
+    _animator.duration = widget.animDuration;
   }
 
   @override
   void initState() {
     super.initState();
-    _animator = AnimationController(vsync: this, duration: widget.animDuration);
     _currentStep = widget.initialStep ?? widget.steps.first;
-    _animateTo(_currentStep, restart: false);
-    _updateSnapper();
+    _animator = AnimationController(
+        vsync: this, duration: widget.animDuration, value: 1.0);
+    _snapper = _createSnapper();
+    _animateTo(_currentStep, false);
   }
 
-  void _updateSnapper() {
-    _snapper = (widget.snapMode ?? SnapMode.stretch())
-        .snapperFor(widget.steps.toList(), widget.min, widget.max);
-  }
+  Snapper _createSnapper() => (widget.snapMode ?? SnapMode.stretch())
+      .snapperFor(widget.steps, widget.min, widget.max);
 
   @override
   void dispose() {
@@ -161,19 +162,19 @@ class _StepSliderState extends State<StepSlider>
 
   void _onSliderChangeStart(double value) {
     if (!widget.hardSnap) {
-      _animateTo(value, restart: true);
+      _animateTo(value, true);
     }
   }
 
   void _onSliderChangeEnd(double value) {
     if (!widget.hardSnap) {
-      _animateTo(_currentStep, restart: true);
+      _animateTo(_currentStep, true);
     }
   }
 
   void _onSliderChanged(double value) {
     if (!widget.hardSnap) {
-      setState(() => _animateTo(value, restart: false));
+      setState(() => _animateTo(value, false));
     }
     final step = _snapper.snap(value);
     if (step != null && step != _currentStep) {
@@ -184,15 +185,15 @@ class _StepSliderState extends State<StepSlider>
   void _onStepChanged(double step) {
     _currentStep = step;
     if (widget.hardSnap) {
-      setState(() => _animateTo(_currentStep, restart: true));
+      setState(() => _animateTo(_currentStep, true));
     }
     widget.onStepChanged?.call(_currentStep);
   }
 
-  void _animateTo(double end, {bool restart}) {
-    _animation = Tween(begin: _animation?.value ?? end, end: end)
-        .chain(CurveTween(curve: widget.animCurve))
-        .animate(_animator);
+  void _animateTo(double end, bool restart) {
+    final tween = Tween(begin: _animation?.value ?? end, end: end);
+    _animation = CurvedAnimation(
+        parent: tween.animate(_animator), curve: widget.animCurve);
     if (restart) {
       _animator.forward(from: 0.0);
     }
