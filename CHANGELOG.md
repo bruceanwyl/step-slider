@@ -1,3 +1,3 @@
-## [1.0.0] - 14/04/2019
+## [1.0.0+1] - 15/04/2019
 
 * Implement core functionality.

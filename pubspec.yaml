@@ -1,6 +1,6 @@
 name: step_slider
 description: Flutter slider widget that snaps to given step values and notifies each step change.
-version: 1.0.0
+version: 1.0.0+1
 author: Tomasz Wyrowinski <tomwyr@hotmail.com>
 homepage: https://github.com/tomwyr/step-slider/
 
