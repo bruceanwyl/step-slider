@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:step_slider/slider.dart';
+import 'package:step_slider/step_slider.dart';
 
 void main() => runApp(SliderExample());
 
