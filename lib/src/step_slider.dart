@@ -135,7 +135,7 @@ class _StepSliderState extends State<StepSlider>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animation,
+      animation: _animator,
       builder: (_, __) => Slider(
             key: widget.sliderKey,
             min: widget.min,
@@ -176,7 +176,7 @@ class _StepSliderState extends State<StepSlider>
 
   void _onSliderChanged(double value) {
     if (!widget.hardSnap) {
-      setState(() => _animateTo(value, false));
+      _animateTo(value, false);
     }
     final step = _snapper.snap(value);
     if (step != null && step != _currentStep) {
@@ -187,7 +187,7 @@ class _StepSliderState extends State<StepSlider>
   void _onStepChanged(double step) {
     _currentStep = step;
     if (widget.hardSnap) {
-      setState(() => _animateTo(_currentStep, true));
+      _animateTo(_currentStep, true);
     }
     widget.onStepChanged?.call(_currentStep);
   }
@@ -197,6 +197,9 @@ class _StepSliderState extends State<StepSlider>
         Tween(begin: _animation?.value ?? end, end: end).animate(_baseAnim);
     if (restart) {
       _animator.forward(from: 0.0);
+    }
+    if (!_animator.isAnimating) {
+      setState(() {});
     }
   }
 }
